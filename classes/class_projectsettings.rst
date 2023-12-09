@@ -1964,7 +1964,9 @@ Changes to this setting will only be applied upon restarting the application.
 
 :ref:`int<class_int>` **application/run/frame_delay_msec** = ``0``
 
-Forces a delay between frames in the main loop (in milliseconds). This may be useful if you plan to disable vertical synchronization.
+Forces a *constant* delay between frames in the main loop (in milliseconds). In most situations, :ref:`application/run/max_fps<class_ProjectSettings_property_application/run/max_fps>` should be preferred as an FPS limiter as it's more precise.
+
+This setting can be overridden using the ``--frame-delay <ms;>`` command line argument.
 
 .. rst-class:: classref-item-separator
 
@@ -11271,6 +11273,8 @@ Specify whether OpenXR should be configured for an HMD or a hand held device.
 
 If true and foveation is supported, will automatically adjust foveation level based on framerate up to the level set on :ref:`xr/openxr/foveation_level<class_ProjectSettings_property_xr/openxr/foveation_level>`.
 
+\ **Note:** Only works on compatibility renderer.
+
 .. rst-class:: classref-item-separator
 
 ----
@@ -11282,6 +11286,8 @@ If true and foveation is supported, will automatically adjust foveation level ba
 :ref:`int<class_int>` **xr/openxr/foveation_level** = ``"0"``
 
 Applied foveation level if supported: 0 = off, 1 = low, 2 = medium, 3 = high.
+
+\ **Note:** Only works on compatibility renderer.
 
 .. rst-class:: classref-item-separator
 
