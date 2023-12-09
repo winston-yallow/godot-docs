@@ -170,7 +170,7 @@ Particles are drawn in the order emitted.
 
 :ref:`DrawOrder<enum_GPUParticles3D_DrawOrder>` **DRAW_ORDER_LIFETIME** = ``1``
 
-Particles are drawn in order of remaining lifetime.
+Particles are drawn in order of remaining lifetime. In other words, the particle with the highest lifetime is drawn at the front.
 
 .. _class_GPUParticles3D_constant_DRAW_ORDER_REVERSE_LIFETIME:
 
@@ -178,7 +178,7 @@ Particles are drawn in order of remaining lifetime.
 
 :ref:`DrawOrder<enum_GPUParticles3D_DrawOrder>` **DRAW_ORDER_REVERSE_LIFETIME** = ``2``
 
-
+Particles are drawn in reverse order of remaining lifetime. In other words, the particle with the lowest lifetime is drawn at the front.
 
 .. _class_GPUParticles3D_constant_DRAW_ORDER_VIEW_DEPTH:
 
@@ -842,6 +842,8 @@ Sets this node's properties to match a given :ref:`CPUParticles3D<class_CPUParti
 void **emit_particle** **(** :ref:`Transform3D<class_Transform3D>` xform, :ref:`Vector3<class_Vector3>` velocity, :ref:`Color<class_Color>` color, :ref:`Color<class_Color>` custom, :ref:`int<class_int>` flags **)**
 
 Emits a single particle. Whether ``xform``, ``velocity``, ``color`` and ``custom`` are applied depends on the value of ``flags``. See :ref:`EmitFlags<enum_GPUParticles3D_EmitFlags>`.
+
+The default ParticleProcessMaterial will overwrite ``color`` and use the contents of ``custom`` as ``(rotation, age, animation, lifetime)``.
 
 .. rst-class:: classref-item-separator
 
