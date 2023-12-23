@@ -1453,6 +1453,12 @@ Properties
    +---------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------+
    | :ref:`String<class_String>`                       | :ref:`rendering/renderer/rendering_method.web<class_ProjectSettings_property_rendering/renderer/rendering_method.web>`                                                                                     | ``"gl_compatibility"``                                                                           |
    +---------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------+
+   | :ref:`int<class_int>`                             | :ref:`rendering/rendering_device/d3d12/max_misc_descriptors_per_frame<class_ProjectSettings_property_rendering/rendering_device/d3d12/max_misc_descriptors_per_frame>`                                     | ``512``                                                                                          |
+   +---------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------+
+   | :ref:`int<class_int>`                             | :ref:`rendering/rendering_device/d3d12/max_resource_descriptors_per_frame<class_ProjectSettings_property_rendering/rendering_device/d3d12/max_resource_descriptors_per_frame>`                             | ``16384``                                                                                        |
+   +---------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------+
+   | :ref:`int<class_int>`                             | :ref:`rendering/rendering_device/d3d12/max_sampler_descriptors_per_frame<class_ProjectSettings_property_rendering/rendering_device/d3d12/max_sampler_descriptors_per_frame>`                               | ``1024``                                                                                         |
+   +---------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------+
    | :ref:`String<class_String>`                       | :ref:`rendering/rendering_device/driver<class_ProjectSettings_property_rendering/rendering_device/driver>`                                                                                                 |                                                                                                  |
    +---------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------+
    | :ref:`String<class_String>`                       | :ref:`rendering/rendering_device/driver.android<class_ProjectSettings_property_rendering/rendering_device/driver.android>`                                                                                 |                                                                                                  |
@@ -1964,7 +1970,9 @@ Changes to this setting will only be applied upon restarting the application.
 
 :ref:`int<class_int>` **application/run/frame_delay_msec** = ``0``
 
-Forces a delay between frames in the main loop (in milliseconds). This may be useful if you plan to disable vertical synchronization.
+Forces a *constant* delay between frames in the main loop (in milliseconds). In most situations, :ref:`application/run/max_fps<class_ProjectSettings_property_application/run/max_fps>` should be preferred as an FPS limiter as it's more precise.
+
+This setting can be overridden using the ``--frame-delay <ms;>`` command line argument.
 
 .. rst-class:: classref-item-separator
 
@@ -10626,6 +10634,48 @@ Override for :ref:`rendering/renderer/rendering_method<class_ProjectSettings_pro
 
 ----
 
+.. _class_ProjectSettings_property_rendering/rendering_device/d3d12/max_misc_descriptors_per_frame:
+
+.. rst-class:: classref-property
+
+:ref:`int<class_int>` **rendering/rendering_device/d3d12/max_misc_descriptors_per_frame** = ``512``
+
+The number of entries in the miscellaneous descriptors heap the Direct3D 12 rendering driver uses each frame, used for various operations like clearing a texture.
+
+Depending on the complexity of scenes, this value may be lowered or may need to be raised.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ProjectSettings_property_rendering/rendering_device/d3d12/max_resource_descriptors_per_frame:
+
+.. rst-class:: classref-property
+
+:ref:`int<class_int>` **rendering/rendering_device/d3d12/max_resource_descriptors_per_frame** = ``16384``
+
+The number of entries in the resource descriptors heap the Direct3D 12 rendering driver uses each frame, used for most rendering operations.
+
+Depending on the complexity of scenes, this value may be lowered or may need to be raised.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ProjectSettings_property_rendering/rendering_device/d3d12/max_sampler_descriptors_per_frame:
+
+.. rst-class:: classref-property
+
+:ref:`int<class_int>` **rendering/rendering_device/d3d12/max_sampler_descriptors_per_frame** = ``1024``
+
+The number of entries in the sampler descriptors heap the Direct3D 12 rendering driver uses each frame, used for most rendering operations.
+
+Depending on the complexity of scenes, this value may be lowered or may need to be raised.
+
+.. rst-class:: classref-item-separator
+
+----
+
 .. _class_ProjectSettings_property_rendering/rendering_device/driver:
 
 .. rst-class:: classref-property
@@ -11271,6 +11321,8 @@ Specify whether OpenXR should be configured for an HMD or a hand held device.
 
 If true and foveation is supported, will automatically adjust foveation level based on framerate up to the level set on :ref:`xr/openxr/foveation_level<class_ProjectSettings_property_xr/openxr/foveation_level>`.
 
+\ **Note:** Only works on compatibility renderer.
+
 .. rst-class:: classref-item-separator
 
 ----
@@ -11282,6 +11334,8 @@ If true and foveation is supported, will automatically adjust foveation level ba
 :ref:`int<class_int>` **xr/openxr/foveation_level** = ``"0"``
 
 Applied foveation level if supported: 0 = off, 1 = low, 2 = medium, 3 = high.
+
+\ **Note:** Only works on compatibility renderer.
 
 .. rst-class:: classref-item-separator
 
