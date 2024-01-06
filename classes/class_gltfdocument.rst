@@ -30,6 +30,8 @@ GLTFDocument can be extended with arbitrary functionality by extending the :ref:
 Tutorials
 ---------
 
+- :doc:`Runtime file loading and saving <../tutorials/io/runtime_file_loading_and_saving>`
+
 - `glTF 'What the duck?' guide <https://www.khronos.org/files/gltf20-reference-guide.pdf>`__
 
 - `Khronos glTF specification <https://registry.khronos.org/glTF/>`__
@@ -282,7 +284,7 @@ Unregisters the given :ref:`GLTFDocumentExtension<class_GLTFDocumentExtension>` 
 
 Takes a :ref:`GLTFState<class_GLTFState>` object through the ``state`` parameter and writes a glTF file to the filesystem.
 
-\ **Note:** The extension of the glTF file determines if it is a .glb binary file or a .gltf file.
+\ **Note:** The extension of the glTF file determines if it is a .glb binary file or a .gltf text file.
 
 .. |virtual| replace:: :abbr:`virtual (This method should typically be overridden by the user to have any effect.)`
 .. |const| replace:: :abbr:`const (This method has no side effects. It doesn't modify any of the instance's member variables.)`
