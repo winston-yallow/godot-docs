@@ -2393,6 +2393,42 @@ Group Switch key mask.
 
 ----
 
+.. _enum_@GlobalScope_KeyLocation:
+
+.. rst-class:: classref-enumeration
+
+enum **KeyLocation**:
+
+.. _class_@GlobalScope_constant_KEY_LOCATION_UNSPECIFIED:
+
+.. rst-class:: classref-enumeration-constant
+
+:ref:`KeyLocation<enum_@GlobalScope_KeyLocation>` **KEY_LOCATION_UNSPECIFIED** = ``0``
+
+Used for keys which only appear once, or when a comparison doesn't need to differentiate the ``LEFT`` and ``RIGHT`` versions.
+
+For example, when using :ref:`InputEvent.is_match<class_InputEvent_method_is_match>`, an event which has :ref:`KEY_LOCATION_UNSPECIFIED<class_@GlobalScope_constant_KEY_LOCATION_UNSPECIFIED>` will match any :ref:`KeyLocation<enum_@GlobalScope_KeyLocation>` on the passed event.
+
+.. _class_@GlobalScope_constant_KEY_LOCATION_LEFT:
+
+.. rst-class:: classref-enumeration-constant
+
+:ref:`KeyLocation<enum_@GlobalScope_KeyLocation>` **KEY_LOCATION_LEFT** = ``1``
+
+A key which is to the left of its twin.
+
+.. _class_@GlobalScope_constant_KEY_LOCATION_RIGHT:
+
+.. rst-class:: classref-enumeration-constant
+
+:ref:`KeyLocation<enum_@GlobalScope_KeyLocation>` **KEY_LOCATION_RIGHT** = ``2``
+
+A key which is to the right of its twin.
+
+.. rst-class:: classref-item-separator
+
+----
+
 .. _enum_@GlobalScope_MouseButton:
 
 .. rst-class:: classref-enumeration
@@ -2835,7 +2871,7 @@ enum **MIDIMessage**:
 
 :ref:`MIDIMessage<enum_@GlobalScope_MIDIMessage>` **MIDI_MESSAGE_NONE** = ``0``
 
-Enum value which doesn't correspond to any MIDI message. This is used to initialize :ref:`MIDIMessage<enum_@GlobalScope_MIDIMessage>` properties with a generic state.
+Does not correspond to any MIDI message. This is the default value of :ref:`InputEventMIDI.message<class_InputEventMIDI_property_message>`.
 
 .. _class_@GlobalScope_constant_MIDI_MESSAGE_NOTE_OFF:
 
@@ -2843,7 +2879,9 @@ Enum value which doesn't correspond to any MIDI message. This is used to initial
 
 :ref:`MIDIMessage<enum_@GlobalScope_MIDIMessage>` **MIDI_MESSAGE_NOTE_OFF** = ``8``
 
-MIDI note OFF message. Not all MIDI devices send this event; some send :ref:`MIDI_MESSAGE_NOTE_ON<class_@GlobalScope_constant_MIDI_MESSAGE_NOTE_ON>` with zero velocity instead. See the documentation of :ref:`InputEventMIDI<class_InputEventMIDI>` for information of how to use MIDI inputs.
+MIDI message sent when a note is released.
+
+\ **Note:** Not all MIDI devices send this message; some may send :ref:`MIDI_MESSAGE_NOTE_ON<class_@GlobalScope_constant_MIDI_MESSAGE_NOTE_ON>` with :ref:`InputEventMIDI.velocity<class_InputEventMIDI_property_velocity>` set to ``0``.
 
 .. _class_@GlobalScope_constant_MIDI_MESSAGE_NOTE_ON:
 
@@ -2851,7 +2889,7 @@ MIDI note OFF message. Not all MIDI devices send this event; some send :ref:`MID
 
 :ref:`MIDIMessage<enum_@GlobalScope_MIDIMessage>` **MIDI_MESSAGE_NOTE_ON** = ``9``
 
-MIDI note ON message. Some MIDI devices send this event with velocity zero instead of :ref:`MIDI_MESSAGE_NOTE_OFF<class_@GlobalScope_constant_MIDI_MESSAGE_NOTE_OFF>`, but implementations vary. See the documentation of :ref:`InputEventMIDI<class_InputEventMIDI>` for information of how to use MIDI inputs.
+MIDI message sent when a note is pressed.
 
 .. _class_@GlobalScope_constant_MIDI_MESSAGE_AFTERTOUCH:
 
@@ -2859,7 +2897,7 @@ MIDI note ON message. Some MIDI devices send this event with velocity zero inste
 
 :ref:`MIDIMessage<enum_@GlobalScope_MIDIMessage>` **MIDI_MESSAGE_AFTERTOUCH** = ``10``
 
-MIDI aftertouch message. This message is most often sent by pressing down on the key after it "bottoms out".
+MIDI message sent to indicate a change in pressure while a note is being pressed down, also called aftertouch.
 
 .. _class_@GlobalScope_constant_MIDI_MESSAGE_CONTROL_CHANGE:
 
@@ -2867,7 +2905,7 @@ MIDI aftertouch message. This message is most often sent by pressing down on the
 
 :ref:`MIDIMessage<enum_@GlobalScope_MIDIMessage>` **MIDI_MESSAGE_CONTROL_CHANGE** = ``11``
 
-MIDI control change message. This message is sent when a controller value changes. Controllers include devices such as pedals and levers.
+MIDI message sent when a controller value changes. In a MIDI device, a controller is any input that doesn't play notes. These may include sliders for volume, balance, and panning, as well as switches and pedals. See the `General MIDI specification <https://en.wikipedia.org/wiki/General_MIDI#Controller_events>`__ for a small list.
 
 .. _class_@GlobalScope_constant_MIDI_MESSAGE_PROGRAM_CHANGE:
 
@@ -2875,7 +2913,7 @@ MIDI control change message. This message is sent when a controller value change
 
 :ref:`MIDIMessage<enum_@GlobalScope_MIDIMessage>` **MIDI_MESSAGE_PROGRAM_CHANGE** = ``12``
 
-MIDI program change message. This message sent when the program patch number changes.
+MIDI message sent when the MIDI device changes its current instrument (also called *program* or *preset*).
 
 .. _class_@GlobalScope_constant_MIDI_MESSAGE_CHANNEL_PRESSURE:
 
@@ -2883,7 +2921,7 @@ MIDI program change message. This message sent when the program patch number cha
 
 :ref:`MIDIMessage<enum_@GlobalScope_MIDIMessage>` **MIDI_MESSAGE_CHANNEL_PRESSURE** = ``13``
 
-MIDI channel pressure message. This message is most often sent by pressing down on the key after it "bottoms out". This message is different from polyphonic after-touch as it indicates the highest pressure across all keys.
+MIDI message sent to indicate a change in pressure for the whole channel. Some MIDI devices may send this instead of :ref:`MIDI_MESSAGE_AFTERTOUCH<class_@GlobalScope_constant_MIDI_MESSAGE_AFTERTOUCH>`.
 
 .. _class_@GlobalScope_constant_MIDI_MESSAGE_PITCH_BEND:
 
@@ -2891,7 +2929,7 @@ MIDI channel pressure message. This message is most often sent by pressing down 
 
 :ref:`MIDIMessage<enum_@GlobalScope_MIDIMessage>` **MIDI_MESSAGE_PITCH_BEND** = ``14``
 
-MIDI pitch bend message. This message is sent to indicate a change in the pitch bender (wheel or lever, typically).
+MIDI message sent when the value of the pitch bender changes, usually a wheel on the MIDI device.
 
 .. _class_@GlobalScope_constant_MIDI_MESSAGE_SYSTEM_EXCLUSIVE:
 
@@ -2899,7 +2937,9 @@ MIDI pitch bend message. This message is sent to indicate a change in the pitch 
 
 :ref:`MIDIMessage<enum_@GlobalScope_MIDIMessage>` **MIDI_MESSAGE_SYSTEM_EXCLUSIVE** = ``240``
 
-MIDI system exclusive message. This has behavior exclusive to the device you're receiving input from. Getting this data is not implemented in Godot.
+MIDI system exclusive (SysEx) message. This type of message is not standardized and it's highly dependent on the MIDI device sending it.
+
+\ **Note:** Getting this message's data from :ref:`InputEventMIDI<class_InputEventMIDI>` is not implemented.
 
 .. _class_@GlobalScope_constant_MIDI_MESSAGE_QUARTER_FRAME:
 
@@ -2907,7 +2947,9 @@ MIDI system exclusive message. This has behavior exclusive to the device you're 
 
 :ref:`MIDIMessage<enum_@GlobalScope_MIDIMessage>` **MIDI_MESSAGE_QUARTER_FRAME** = ``241``
 
-MIDI quarter frame message. Contains timing information that is used to synchronize MIDI devices. Getting this data is not implemented in Godot.
+MIDI message sent every quarter frame to keep connected MIDI devices synchronized. Related to :ref:`MIDI_MESSAGE_TIMING_CLOCK<class_@GlobalScope_constant_MIDI_MESSAGE_TIMING_CLOCK>`.
+
+\ **Note:** Getting this message's data from :ref:`InputEventMIDI<class_InputEventMIDI>` is not implemented.
 
 .. _class_@GlobalScope_constant_MIDI_MESSAGE_SONG_POSITION_POINTER:
 
@@ -2915,7 +2957,9 @@ MIDI quarter frame message. Contains timing information that is used to synchron
 
 :ref:`MIDIMessage<enum_@GlobalScope_MIDIMessage>` **MIDI_MESSAGE_SONG_POSITION_POINTER** = ``242``
 
-MIDI song position pointer message. Gives the number of 16th notes since the start of the song. Getting this data is not implemented in Godot.
+MIDI message sent to jump onto a new position in the current sequence or song.
+
+\ **Note:** Getting this message's data from :ref:`InputEventMIDI<class_InputEventMIDI>` is not implemented.
 
 .. _class_@GlobalScope_constant_MIDI_MESSAGE_SONG_SELECT:
 
@@ -2923,7 +2967,9 @@ MIDI song position pointer message. Gives the number of 16th notes since the sta
 
 :ref:`MIDIMessage<enum_@GlobalScope_MIDIMessage>` **MIDI_MESSAGE_SONG_SELECT** = ``243``
 
-MIDI song select message. Specifies which sequence or song is to be played. Getting this data is not implemented in Godot.
+MIDI message sent to select a sequence or song to play.
+
+\ **Note:** Getting this message's data from :ref:`InputEventMIDI<class_InputEventMIDI>` is not implemented.
 
 .. _class_@GlobalScope_constant_MIDI_MESSAGE_TUNE_REQUEST:
 
@@ -2931,7 +2977,7 @@ MIDI song select message. Specifies which sequence or song is to be played. Gett
 
 :ref:`MIDIMessage<enum_@GlobalScope_MIDIMessage>` **MIDI_MESSAGE_TUNE_REQUEST** = ``246``
 
-MIDI tune request message. Upon receiving a tune request, all analog synthesizers should tune their oscillators.
+MIDI message sent to request a tuning calibration. Used on analog synthesizers. Most modern MIDI devices do not need this message.
 
 .. _class_@GlobalScope_constant_MIDI_MESSAGE_TIMING_CLOCK:
 
@@ -2939,7 +2985,7 @@ MIDI tune request message. Upon receiving a tune request, all analog synthesizer
 
 :ref:`MIDIMessage<enum_@GlobalScope_MIDIMessage>` **MIDI_MESSAGE_TIMING_CLOCK** = ``248``
 
-MIDI timing clock message. Sent 24 times per quarter note when synchronization is required.
+MIDI message sent 24 times after :ref:`MIDI_MESSAGE_QUARTER_FRAME<class_@GlobalScope_constant_MIDI_MESSAGE_QUARTER_FRAME>`, to keep connected MIDI devices synchronized.
 
 .. _class_@GlobalScope_constant_MIDI_MESSAGE_START:
 
@@ -2947,7 +2993,7 @@ MIDI timing clock message. Sent 24 times per quarter note when synchronization i
 
 :ref:`MIDIMessage<enum_@GlobalScope_MIDIMessage>` **MIDI_MESSAGE_START** = ``250``
 
-MIDI start message. Start the current sequence playing. This message will be followed with Timing Clocks.
+MIDI message sent to start the current sequence or song from the beginning.
 
 .. _class_@GlobalScope_constant_MIDI_MESSAGE_CONTINUE:
 
@@ -2955,7 +3001,7 @@ MIDI start message. Start the current sequence playing. This message will be fol
 
 :ref:`MIDIMessage<enum_@GlobalScope_MIDIMessage>` **MIDI_MESSAGE_CONTINUE** = ``251``
 
-MIDI continue message. Continue at the point the sequence was stopped.
+MIDI message sent to resume from the point the current sequence or song was paused.
 
 .. _class_@GlobalScope_constant_MIDI_MESSAGE_STOP:
 
@@ -2963,7 +3009,7 @@ MIDI continue message. Continue at the point the sequence was stopped.
 
 :ref:`MIDIMessage<enum_@GlobalScope_MIDIMessage>` **MIDI_MESSAGE_STOP** = ``252``
 
-MIDI stop message. Stop the current sequence.
+MIDI message sent to pause the current sequence or song.
 
 .. _class_@GlobalScope_constant_MIDI_MESSAGE_ACTIVE_SENSING:
 
@@ -2971,7 +3017,7 @@ MIDI stop message. Stop the current sequence.
 
 :ref:`MIDIMessage<enum_@GlobalScope_MIDIMessage>` **MIDI_MESSAGE_ACTIVE_SENSING** = ``254``
 
-MIDI active sensing message. This message is intended to be sent repeatedly to tell the receiver that a connection is alive.
+MIDI message sent repeatedly while the MIDI device is idle, to tell the receiver that the connection is alive. Most MIDI devices do not send this message.
 
 .. _class_@GlobalScope_constant_MIDI_MESSAGE_SYSTEM_RESET:
 
@@ -2979,7 +3025,7 @@ MIDI active sensing message. This message is intended to be sent repeatedly to t
 
 :ref:`MIDIMessage<enum_@GlobalScope_MIDIMessage>` **MIDI_MESSAGE_SYSTEM_RESET** = ``255``
 
-MIDI system reset message. Reset all receivers in the system to power-up status. It should not be sent on power-up itself.
+MIDI message sent to reset a MIDI device to its default state, as if it was just turned on. It should not be sent when the MIDI device is being turned on.
 
 .. rst-class:: classref-item-separator
 
@@ -3615,7 +3661,7 @@ Hints that a :ref:`Color<class_Color>` property should be edited without affecti
 
 :ref:`PropertyHint<enum_@GlobalScope_PropertyHint>` **PROPERTY_HINT_OBJECT_ID** = ``22``
 
-
+Hints that the property's value is an object encoded as object ID, with its type specified in the hint string. Used by the debugger.
 
 .. _class_@GlobalScope_constant_PROPERTY_HINT_TYPE_STRING:
 
@@ -3698,7 +3744,7 @@ Examples:
 
 :ref:`PropertyHint<enum_@GlobalScope_PropertyHint>` **PROPERTY_HINT_NODE_PATH_TO_EDITED_NODE** = ``24``
 
-
+*Deprecated.* This hint is not used anywhere and will be removed in the future.
 
 .. _class_@GlobalScope_constant_PROPERTY_HINT_OBJECT_TOO_BIG:
 
@@ -3706,7 +3752,7 @@ Examples:
 
 :ref:`PropertyHint<enum_@GlobalScope_PropertyHint>` **PROPERTY_HINT_OBJECT_TOO_BIG** = ``25``
 
-
+Hints that an object is too big to be sent via the debugger.
 
 .. _class_@GlobalScope_constant_PROPERTY_HINT_NODE_PATH_VALID_TYPES:
 
@@ -3714,7 +3760,7 @@ Examples:
 
 :ref:`PropertyHint<enum_@GlobalScope_PropertyHint>` **PROPERTY_HINT_NODE_PATH_VALID_TYPES** = ``26``
 
-
+Hints that the hint string specifies valid node types for property of type :ref:`NodePath<class_NodePath>`.
 
 .. _class_@GlobalScope_constant_PROPERTY_HINT_SAVE_FILE:
 
@@ -3722,7 +3768,7 @@ Examples:
 
 :ref:`PropertyHint<enum_@GlobalScope_PropertyHint>` **PROPERTY_HINT_SAVE_FILE** = ``27``
 
-
+Hints that a :ref:`String<class_String>` property is a path to a file. Editing it will show a file dialog for picking the path for the file to be saved at. The dialog has access to the project's directory. The hint string can be a set of filters with wildcards like ``"*.png,*.jpg"``. See also :ref:`FileDialog.filters<class_FileDialog_property_filters>`.
 
 .. _class_@GlobalScope_constant_PROPERTY_HINT_GLOBAL_SAVE_FILE:
 
@@ -3730,7 +3776,7 @@ Examples:
 
 :ref:`PropertyHint<enum_@GlobalScope_PropertyHint>` **PROPERTY_HINT_GLOBAL_SAVE_FILE** = ``28``
 
-
+Hints that a :ref:`String<class_String>` property is a path to a file. Editing it will show a file dialog for picking the path for the file to be saved at. The dialog has access to the entire filesystem. The hint string can be a set of filters with wildcards like ``"*.png,*.jpg"``. See also :ref:`FileDialog.filters<class_FileDialog_property_filters>`.
 
 .. _class_@GlobalScope_constant_PROPERTY_HINT_INT_IS_OBJECTID:
 
@@ -3738,7 +3784,9 @@ Examples:
 
 :ref:`PropertyHint<enum_@GlobalScope_PropertyHint>` **PROPERTY_HINT_INT_IS_OBJECTID** = ``29``
 
+Hints that an :ref:`int<class_int>` property is an object ID.
 
+\ *Deprecated.* This hint is not used anywhere and will be removed in the future.
 
 .. _class_@GlobalScope_constant_PROPERTY_HINT_INT_IS_POINTER:
 
@@ -3746,7 +3794,7 @@ Examples:
 
 :ref:`PropertyHint<enum_@GlobalScope_PropertyHint>` **PROPERTY_HINT_INT_IS_POINTER** = ``30``
 
-
+Hints that an :ref:`int<class_int>` property is a pointer. Used by GDExtension.
 
 .. _class_@GlobalScope_constant_PROPERTY_HINT_ARRAY_TYPE:
 
@@ -3754,7 +3802,7 @@ Examples:
 
 :ref:`PropertyHint<enum_@GlobalScope_PropertyHint>` **PROPERTY_HINT_ARRAY_TYPE** = ``31``
 
-
+Hints that a property is an :ref:`Array<class_Array>` with the stored type specified in the hint string.
 
 .. _class_@GlobalScope_constant_PROPERTY_HINT_LOCALE_ID:
 
@@ -3778,7 +3826,7 @@ Hints that a dictionary property is string translation map. Dictionary keys are 
 
 :ref:`PropertyHint<enum_@GlobalScope_PropertyHint>` **PROPERTY_HINT_NODE_TYPE** = ``34``
 
-
+Hints that a property is an instance of a :ref:`Node<class_Node>`-derived type, optionally specified via the hint string (e.g. ``"Node2D"``). Editing it will show a dialog for picking a node from the scene.
 
 .. _class_@GlobalScope_constant_PROPERTY_HINT_HIDE_QUATERNION_EDIT:
 
@@ -3892,7 +3940,7 @@ Used to group properties together in the editor in a subgroup (under a group). S
 
 :ref:`PropertyUsageFlags<enum_@GlobalScope_PropertyUsageFlags>` **PROPERTY_USAGE_CLASS_IS_BITFIELD** = ``512``
 
-
+The property is a bitfield, i.e. it contains multiple flags represented as bits.
 
 .. _class_@GlobalScope_constant_PROPERTY_USAGE_NO_INSTANCE_STATE:
 
@@ -3924,7 +3972,7 @@ The property is a script variable which should be serialized and saved in the sc
 
 :ref:`PropertyUsageFlags<enum_@GlobalScope_PropertyUsageFlags>` **PROPERTY_USAGE_STORE_IF_NULL** = ``8192``
 
-
+The property value of type :ref:`Object<class_Object>` will be stored even if its value is ``null``.
 
 .. _class_@GlobalScope_constant_PROPERTY_USAGE_UPDATE_ALL_IF_MODIFIED:
 
@@ -3932,7 +3980,7 @@ The property is a script variable which should be serialized and saved in the sc
 
 :ref:`PropertyUsageFlags<enum_@GlobalScope_PropertyUsageFlags>` **PROPERTY_USAGE_UPDATE_ALL_IF_MODIFIED** = ``16384``
 
-
+If this property is modified, all inspector fields will be refreshed.
 
 .. _class_@GlobalScope_constant_PROPERTY_USAGE_SCRIPT_DEFAULT_VALUE:
 
@@ -3940,7 +3988,9 @@ The property is a script variable which should be serialized and saved in the sc
 
 :ref:`PropertyUsageFlags<enum_@GlobalScope_PropertyUsageFlags>` **PROPERTY_USAGE_SCRIPT_DEFAULT_VALUE** = ``32768``
 
+Signifies a default value from a placeholder script instance.
 
+\ *Deprecated.* This hint is not used anywhere and will be removed in the future.
 
 .. _class_@GlobalScope_constant_PROPERTY_USAGE_CLASS_IS_ENUM:
 
@@ -3948,7 +3998,7 @@ The property is a script variable which should be serialized and saved in the sc
 
 :ref:`PropertyUsageFlags<enum_@GlobalScope_PropertyUsageFlags>` **PROPERTY_USAGE_CLASS_IS_ENUM** = ``65536``
 
-
+The property is an enum, i.e. it only takes named integer constants from its associated enumeration.
 
 .. _class_@GlobalScope_constant_PROPERTY_USAGE_NIL_IS_VARIANT:
 
@@ -3956,7 +4006,7 @@ The property is a script variable which should be serialized and saved in the sc
 
 :ref:`PropertyUsageFlags<enum_@GlobalScope_PropertyUsageFlags>` **PROPERTY_USAGE_NIL_IS_VARIANT** = ``131072``
 
-
+If property has ``nil`` as default value, its type will be :ref:`Variant<class_Variant>`.
 
 .. _class_@GlobalScope_constant_PROPERTY_USAGE_ARRAY:
 
@@ -3996,7 +4046,7 @@ The property is only shown in the editor if modern renderers are supported (the 
 
 :ref:`PropertyUsageFlags<enum_@GlobalScope_PropertyUsageFlags>` **PROPERTY_USAGE_NODE_PATH_FROM_SCENE_ROOT** = ``4194304``
 
-
+The :ref:`NodePath<class_NodePath>` property will always be relative to the scene's root. Mostly useful for local resources.
 
 .. _class_@GlobalScope_constant_PROPERTY_USAGE_RESOURCE_NOT_PERSISTENT:
 
@@ -4004,7 +4054,7 @@ The property is only shown in the editor if modern renderers are supported (the 
 
 :ref:`PropertyUsageFlags<enum_@GlobalScope_PropertyUsageFlags>` **PROPERTY_USAGE_RESOURCE_NOT_PERSISTENT** = ``8388608``
 
-
+Use when a resource is created on the fly, i.e. the getter will always return a different instance. :ref:`ResourceSaver<class_ResourceSaver>` needs this information to properly save such resources.
 
 .. _class_@GlobalScope_constant_PROPERTY_USAGE_KEYING_INCREMENTS:
 
@@ -4012,7 +4062,7 @@ The property is only shown in the editor if modern renderers are supported (the 
 
 :ref:`PropertyUsageFlags<enum_@GlobalScope_PropertyUsageFlags>` **PROPERTY_USAGE_KEYING_INCREMENTS** = ``16777216``
 
-
+Inserting an animation key frame of this property will automatically increment the value, allowing to easily keyframe multiple values in a row.
 
 .. _class_@GlobalScope_constant_PROPERTY_USAGE_DEFERRED_SET_RESOURCE:
 
@@ -4020,7 +4070,9 @@ The property is only shown in the editor if modern renderers are supported (the 
 
 :ref:`PropertyUsageFlags<enum_@GlobalScope_PropertyUsageFlags>` **PROPERTY_USAGE_DEFERRED_SET_RESOURCE** = ``33554432``
 
+When loading, the resource for this property can be set at the end of loading.
 
+\ *Deprecated.* This hint is not used anywhere and will be removed in the future.
 
 .. _class_@GlobalScope_constant_PROPERTY_USAGE_EDITOR_INSTANTIATE_OBJECT:
 
@@ -4028,7 +4080,7 @@ The property is only shown in the editor if modern renderers are supported (the 
 
 :ref:`PropertyUsageFlags<enum_@GlobalScope_PropertyUsageFlags>` **PROPERTY_USAGE_EDITOR_INSTANTIATE_OBJECT** = ``67108864``
 
-
+When this property is a :ref:`Resource<class_Resource>` and base object is a :ref:`Node<class_Node>`, a resource instance will be automatically created whenever the node is created in the editor.
 
 .. _class_@GlobalScope_constant_PROPERTY_USAGE_EDITOR_BASIC_SETTING:
 
@@ -4036,7 +4088,7 @@ The property is only shown in the editor if modern renderers are supported (the 
 
 :ref:`PropertyUsageFlags<enum_@GlobalScope_PropertyUsageFlags>` **PROPERTY_USAGE_EDITOR_BASIC_SETTING** = ``134217728``
 
-
+The property is considered a basic setting and will appear even when advanced mode is disabled. Used for project settings.
 
 .. _class_@GlobalScope_constant_PROPERTY_USAGE_READ_ONLY:
 
@@ -5474,20 +5526,10 @@ Clamps the ``value``, returning a :ref:`Variant<class_Variant>` not less than ``
     
     var b = clamp(8.1, 0.9, 5.5)
     # b is 5.5
-    
-    var c = clamp(Vector2(-3.5, -4), Vector2(-3.2, -2), Vector2(2, 6.5))
-    # c is (-3.2, -2)
-    
-    var d = clamp(Vector2i(7, 8), Vector2i(-3, -2), Vector2i(2, 6))
-    # d is (2, 6)
-    
-    var e = clamp(Vector3(-7, 8.5, -3.8), Vector3(-3, -2, 5.4), Vector3(-2, 6, -4.1))
-    # e is (-3, -2, 5.4)
-    
-    var f = clamp(Vector3i(-7, -8, -9), Vector3i(-1, 2, 3), Vector3i(-4, -5, -6))
-    # f is (-4, -5, -6)
 
-\ **Note:** For better type safety, use :ref:`clampf<class_@GlobalScope_method_clampf>`, :ref:`clampi<class_@GlobalScope_method_clampi>`, :ref:`Vector2.clamp<class_Vector2_method_clamp>`, :ref:`Vector2i.clamp<class_Vector2i_method_clamp>`, :ref:`Vector3.clamp<class_Vector3_method_clamp>`, :ref:`Vector3i.clamp<class_Vector3i_method_clamp>`, :ref:`Vector4.clamp<class_Vector4_method_clamp>`, :ref:`Vector4i.clamp<class_Vector4i_method_clamp>`, or :ref:`Color.clamp<class_Color_method_clamp>`.
+\ **Note:** For better type safety, use :ref:`clampf<class_@GlobalScope_method_clampf>`, :ref:`clampi<class_@GlobalScope_method_clampi>`, :ref:`Vector2.clamp<class_Vector2_method_clamp>`, :ref:`Vector2i.clamp<class_Vector2i_method_clamp>`, :ref:`Vector3.clamp<class_Vector3_method_clamp>`, :ref:`Vector3i.clamp<class_Vector3i_method_clamp>`, :ref:`Vector4.clamp<class_Vector4_method_clamp>`, :ref:`Vector4i.clamp<class_Vector4i_method_clamp>`, or :ref:`Color.clamp<class_Color_method_clamp>` (not currently supported by this method).
+
+\ **Note:** When using this on vectors it will *not* perform component-wise clamping, and will pick ``min`` if ``value < min`` or ``max`` if ``value > max``. To perform component-wise clamping use the methods listed above.
 
 .. rst-class:: classref-item-separator
 
@@ -6412,6 +6454,8 @@ When printing to standard output, the supported subset of BBCode is converted to
 
 \ **Note:** On Windows, only Windows 10 and later correctly displays ANSI escape codes in standard output.
 
+\ **Note:** Output displayed in the editor supports clickable ``[url=address]text[/url]`` tags. The ``[url]`` tag's ``address`` value is handled by :ref:`OS.shell_open<class_OS_method_shell_open>` when clicked.
+
 .. rst-class:: classref-item-separator
 
 ----
@@ -7219,7 +7263,7 @@ Converts the given ``variant`` to the given ``type``, using the :ref:`Variant.Ty
 
 If the type conversion cannot be done, this method will return the default value for that type, for example converting :ref:`Rect2<class_Rect2>` to :ref:`Vector2<class_Vector2>` will always return :ref:`Vector2.ZERO<class_Vector2_constant_ZERO>`. This method will never show error messages as long as ``type`` is a valid Variant type.
 
-The returned value is a :ref:`Variant<class_Variant>`, but the data inside and the :ref:`Variant.Type<enum_@GlobalScope_Variant.Type>` will be the same as the requested type.
+The returned value is a :ref:`Variant<class_Variant>`, but the data inside and its type will be the same as the requested type.
 
 ::
 
@@ -7287,6 +7331,8 @@ Encodes a :ref:`Variant<class_Variant>` value to a byte array, without encoding 
 
 \ **Note:** If you need object serialization, see :ref:`var_to_bytes_with_objects<class_@GlobalScope_method_var_to_bytes_with_objects>`.
 
+\ **Note:** Encoding :ref:`Callable<class_Callable>` is not supported and will result in an empty value, regardless of the data.
+
 .. rst-class:: classref-item-separator
 
 ----
@@ -7298,6 +7344,8 @@ Encodes a :ref:`Variant<class_Variant>` value to a byte array, without encoding 
 :ref:`PackedByteArray<class_PackedByteArray>` **var_to_bytes_with_objects** **(** :ref:`Variant<class_Variant>` variable **)**
 
 Encodes a :ref:`Variant<class_Variant>` value to a byte array. Encoding objects is allowed (and can potentially include executable code). Deserialization can be done with :ref:`bytes_to_var_with_objects<class_@GlobalScope_method_bytes_to_var_with_objects>`.
+
+\ **Note:** Encoding :ref:`Callable<class_Callable>` is not supported and will result in an empty value, regardless of the data.
 
 .. rst-class:: classref-item-separator
 
@@ -7347,7 +7395,7 @@ Prints:
 
 :ref:`Variant<class_Variant>` **weakref** **(** :ref:`Variant<class_Variant>` obj **)**
 
-Returns a weak reference to an object, or ``null`` if ``obj`` is invalid.
+Returns a :ref:`WeakRef<class_WeakRef>` instance holding a weak reference to ``obj``. Returns an empty :ref:`WeakRef<class_WeakRef>` instance if ``obj`` is ``null``. Prints an error and returns ``null`` if ``obj`` is neither :ref:`Object<class_Object>`-derived nor ``null``.
 
 A weak reference to an object is not enough to keep the object alive: when the only remaining references to a referent are weak references, garbage collection is free to destroy the referent and reuse its memory for something else. However, until the object is actually destroyed the weak reference may return the object even if there are no strong references to it.
 
