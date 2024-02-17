@@ -32,6 +32,8 @@ Tutorials
 
 - :doc:`Importing images <../tutorials/assets_pipeline/importing_images>`
 
+- :doc:`Runtime file loading and saving <../tutorials/io/runtime_file_loading_and_saving>`
+
 .. rst-class:: classref-reftable-group
 
 Properties
@@ -273,7 +275,7 @@ OpenGL texture format ``RGBA`` with four components, each with a bitdepth of 4.
 
 :ref:`Format<enum_Image_Format>` **FORMAT_RGB565** = ``7``
 
-
+OpenGL texture format ``RGB`` with three components. Red and blue have a bitdepth of 5, and green has a bitdepth of 6.
 
 .. _class_Image_constant_FORMAT_RF:
 
@@ -495,7 +497,7 @@ Texture format that uses `BPTC <https://www.khronos.org/opengl/wiki/BPTC_Texture
 
 :ref:`Format<enum_Image_Format>` **FORMAT_ETC2_RA_AS_RG** = ``33``
 
-
+`Ericsson Texture Compression format 2 <https://en.wikipedia.org/wiki/Ericsson_Texture_Compression#ETC2_and_EAC>`__ (``RGBA8`` variant), which compresses RA data and interprets it as two channels (red and green). See also :ref:`FORMAT_ETC2_RGBA8<class_Image_constant_FORMAT_ETC2_RGBA8>`.
 
 .. _class_Image_constant_FORMAT_DXT5_RA_AS_RG:
 
@@ -503,7 +505,7 @@ Texture format that uses `BPTC <https://www.khronos.org/opengl/wiki/BPTC_Texture
 
 :ref:`Format<enum_Image_Format>` **FORMAT_DXT5_RA_AS_RG** = ``34``
 
-
+The `S3TC <https://en.wikipedia.org/wiki/S3_Texture_Compression>`__ texture format also known as Block Compression 3 or BC3, which compresses RA data and interprets it as two channels (red and green). See also :ref:`FORMAT_DXT5<class_Image_constant_FORMAT_DXT5>`.
 
 .. _class_Image_constant_FORMAT_ASTC_4x4:
 
@@ -601,7 +603,7 @@ On the other hand, if the image already has mipmaps, they will be used, and a ne
 
 :ref:`Interpolation<enum_Image_Interpolation>` **INTERPOLATE_LANCZOS** = ``4``
 
-Performs Lanczos interpolation. This is the slowest image resizing mode, but it typically gives the best results, especially when downscalng images.
+Performs Lanczos interpolation. This is the slowest image resizing mode, but it typically gives the best results, especially when downscaling images.
 
 .. rst-class:: classref-item-separator
 
@@ -711,7 +713,7 @@ enum **UsedChannels**:
 
 :ref:`UsedChannels<enum_Image_UsedChannels>` **USED_CHANNELS_L** = ``0``
 
-
+The image only uses one channel for luminance (grayscale).
 
 .. _class_Image_constant_USED_CHANNELS_LA:
 
@@ -719,7 +721,7 @@ enum **UsedChannels**:
 
 :ref:`UsedChannels<enum_Image_UsedChannels>` **USED_CHANNELS_LA** = ``1``
 
-
+The image uses two channels for luminance and alpha, respectively.
 
 .. _class_Image_constant_USED_CHANNELS_R:
 
@@ -727,7 +729,7 @@ enum **UsedChannels**:
 
 :ref:`UsedChannels<enum_Image_UsedChannels>` **USED_CHANNELS_R** = ``2``
 
-
+The image only uses the red channel.
 
 .. _class_Image_constant_USED_CHANNELS_RG:
 
@@ -735,7 +737,7 @@ enum **UsedChannels**:
 
 :ref:`UsedChannels<enum_Image_UsedChannels>` **USED_CHANNELS_RG** = ``3``
 
-
+The image uses two channels for red and green.
 
 .. _class_Image_constant_USED_CHANNELS_RGB:
 
@@ -743,7 +745,7 @@ enum **UsedChannels**:
 
 :ref:`UsedChannels<enum_Image_UsedChannels>` **USED_CHANNELS_RGB** = ``4``
 
-
+The image uses three channels for red, green, and blue.
 
 .. _class_Image_constant_USED_CHANNELS_RGBA:
 
@@ -751,7 +753,7 @@ enum **UsedChannels**:
 
 :ref:`UsedChannels<enum_Image_UsedChannels>` **USED_CHANNELS_RGBA** = ``5``
 
-
+The image uses four channels for red, green, blue, and alpha.
 
 .. rst-class:: classref-item-separator
 
@@ -870,9 +872,7 @@ Method Descriptions
 
 void **adjust_bcs** **(** :ref:`float<class_float>` brightness, :ref:`float<class_float>` contrast, :ref:`float<class_float>` saturation **)**
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by :ref:`contributing one <doc_updating_the_class_reference>`!
+Adjusts this image's ``brightness``, ``contrast``, and ``saturation`` by the given values. Does not work if the image is compressed (see :ref:`is_compressed<class_Image_method_is_compressed>`).
 
 .. rst-class:: classref-item-separator
 
@@ -1088,9 +1088,7 @@ Returns :ref:`ALPHA_BLEND<class_Image_constant_ALPHA_BLEND>` if the image has da
 
 :ref:`UsedChannels<enum_Image_UsedChannels>` **detect_used_channels** **(** :ref:`CompressSource<enum_Image_CompressSource>` source=0 **)** |const|
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by :ref:`contributing one <doc_updating_the_class_reference>`!
+Returns the color channels used by this image, as one of the :ref:`UsedChannels<enum_Image_UsedChannels>` constants. If the image is compressed, the original ``source`` must be specified.
 
 .. rst-class:: classref-item-separator
 
@@ -1162,9 +1160,9 @@ Flips the image vertically.
 
 :ref:`Error<enum_@GlobalScope_Error>` **generate_mipmaps** **(** :ref:`bool<class_bool>` renormalize=false **)**
 
-Generates mipmaps for the image. Mipmaps are precalculated lower-resolution copies of the image that are automatically used if the image needs to be scaled down when rendered. They help improve image quality and performance when rendering. This method returns an error if the image is compressed, in a custom format, or if the image's width/height is ``0``. Enabling ``renormalize`` when generating mipmaps for normal textures will make sure all resulting vector values are normalized.
+Generates mipmaps for the image. Mipmaps are precalculated lower-resolution copies of the image that are automatically used if the image needs to be scaled down when rendered. They help improve image quality and performance when rendering. This method returns an error if the image is compressed, in a custom format, or if the image's width/height is ``0``. Enabling ``renormalize`` when generating mipmaps for normal map textures will make sure all resulting vector values are normalized.
 
-It is possible to check if the image has mipmaps by calling :ref:`has_mipmaps<class_Image_method_has_mipmaps>` or :ref:`get_mipmap_count<class_Image_method_get_mipmap_count>`.
+It is possible to check if the image has mipmaps by calling :ref:`has_mipmaps<class_Image_method_has_mipmaps>` or :ref:`get_mipmap_count<class_Image_method_get_mipmap_count>`. Calling :ref:`generate_mipmaps<class_Image_method_generate_mipmaps>` on an image that already has mipmaps will replace existing mipmaps in the image.
 
 .. rst-class:: classref-item-separator
 
@@ -1380,6 +1378,8 @@ Loads an image from the binary contents of a BMP file.
 
 \ **Note:** Godot's BMP module doesn't support 16-bit per pixel images. Only 1-bit, 4-bit, 8-bit, 24-bit, and 32-bit per pixel images are supported.
 
+\ **Note:** This method is only available in engine builds with the BMP module enabled. By default, the BMP module is enabled, but it can be disabled at build-time using the ``module_bmp_enabled=no`` SCons option.
+
 .. rst-class:: classref-item-separator
 
 ----
@@ -1414,7 +1414,11 @@ Loads an image from the binary contents of a JPEG file.
 
 :ref:`Error<enum_@GlobalScope_Error>` **load_ktx_from_buffer** **(** :ref:`PackedByteArray<class_PackedByteArray>` buffer **)**
 
-Loads an image from the binary contents of a KTX file.
+Loads an image from the binary contents of a `KTX <https://github.com/KhronosGroup/KTX-Software>`__ file. Unlike most image formats, KTX can store VRAM-compressed data and embed mipmaps.
+
+\ **Note:** Godot's libktx implementation only supports 2D images. Cubemaps, texture arrays, and de-padding are not supported.
+
+\ **Note:** This method is only available in engine builds with the KTX module enabled. By default, the KTX module is enabled, but it can be disabled at build-time using the ``module_ktx_enabled=no`` SCons option.
 
 .. rst-class:: classref-item-separator
 
@@ -1470,6 +1474,8 @@ Loads an image from the string contents of a SVG file (**.svg**).
 
 Loads an image from the binary contents of a TGA file.
 
+\ **Note:** This method is only available in engine builds with the TGA module enabled. By default, the TGA module is enabled, but it can be disabled at build-time using the ``module_tga_enabled=no`` SCons option.
+
 .. rst-class:: classref-item-separator
 
 ----
@@ -1504,7 +1510,7 @@ Converts the image's data to represent coordinates on a 3D plane. This is used w
 
 void **premultiply_alpha** **(** **)**
 
-Multiplies color values with alpha values. Resulting color values for a pixel are ``(color * alpha)/256``.
+Multiplies color values with alpha values. Resulting color values for a pixel are ``(color * alpha)/256``. See also :ref:`CanvasItemMaterial.blend_mode<class_CanvasItemMaterial_property_blend_mode>`.
 
 .. rst-class:: classref-item-separator
 
@@ -1656,7 +1662,9 @@ Saves the image as a PNG file to a byte array.
 
 :ref:`Error<enum_@GlobalScope_Error>` **save_webp** **(** :ref:`String<class_String>` path, :ref:`bool<class_bool>` lossy=false, :ref:`float<class_float>` quality=0.75 **)** |const|
 
-Saves the image as a WebP (Web Picture) file to the file at ``path``. By default it will save lossless. If ``lossy`` is true, the image will be saved lossy, using the ``quality`` setting between 0.0 and 1.0 (inclusive).
+Saves the image as a WebP (Web Picture) file to the file at ``path``. By default it will save lossless. If ``lossy`` is true, the image will be saved lossy, using the ``quality`` setting between 0.0 and 1.0 (inclusive). Lossless WebP offers more efficient compression than PNG.
+
+\ **Note:** The WebP format is limited to a size of 16383×16383 pixels, while PNG can save larger images.
 
 .. rst-class:: classref-item-separator
 
@@ -1668,7 +1676,9 @@ Saves the image as a WebP (Web Picture) file to the file at ``path``. By default
 
 :ref:`PackedByteArray<class_PackedByteArray>` **save_webp_to_buffer** **(** :ref:`bool<class_bool>` lossy=false, :ref:`float<class_float>` quality=0.75 **)** |const|
 
-Saves the image as a WebP (Web Picture) file to a byte array. By default it will save lossless. If ``lossy`` is true, the image will be saved lossy, using the ``quality`` setting between 0.0 and 1.0 (inclusive).
+Saves the image as a WebP (Web Picture) file to a byte array. By default it will save lossless. If ``lossy`` is true, the image will be saved lossy, using the ``quality`` setting between 0.0 and 1.0 (inclusive). Lossless WebP offers more efficient compression than PNG.
+
+\ **Note:** The WebP format is limited to a size of 16383×16383 pixels, while PNG can save larger images.
 
 .. rst-class:: classref-item-separator
 
@@ -1766,7 +1776,7 @@ This is the same as :ref:`set_pixel<class_Image_method_set_pixel>`, but with a :
 
 void **shrink_x2** **(** **)**
 
-Shrinks the image by a factor of 2.
+Shrinks the image by a factor of 2 on each axis (this divides the pixel count by 4).
 
 .. rst-class:: classref-item-separator
 
