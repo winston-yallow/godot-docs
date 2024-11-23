@@ -33,13 +33,15 @@ Properties
 .. table::
    :widths: auto
 
-   +------------------------------------------+---------------------------------------------------------------------------+---------------------------------------------------------------------+
-   | :ref:`FocusMode<enum_Control_FocusMode>` | focus_mode                                                                | ``1`` (overrides :ref:`Control<class_Control_property_focus_mode>`) |
-   +------------------------------------------+---------------------------------------------------------------------------+---------------------------------------------------------------------+
-   | :ref:`bool<class_bool>`                  | :ref:`stretch<class_SubViewportContainer_property_stretch>`               | ``false``                                                           |
-   +------------------------------------------+---------------------------------------------------------------------------+---------------------------------------------------------------------+
-   | :ref:`int<class_int>`                    | :ref:`stretch_shrink<class_SubViewportContainer_property_stretch_shrink>` | ``1``                                                               |
-   +------------------------------------------+---------------------------------------------------------------------------+---------------------------------------------------------------------+
+   +------------------------------------------+-----------------------------------------------------------------------------------------+---------------------------------------------------------------------+
+   | :ref:`bool<class_bool>`                  | :ref:`consume_drag_and_drop<class_SubViewportContainer_property_consume_drag_and_drop>` | ``false``                                                           |
+   +------------------------------------------+-----------------------------------------------------------------------------------------+---------------------------------------------------------------------+
+   | :ref:`FocusMode<enum_Control_FocusMode>` | focus_mode                                                                              | ``1`` (overrides :ref:`Control<class_Control_property_focus_mode>`) |
+   +------------------------------------------+-----------------------------------------------------------------------------------------+---------------------------------------------------------------------+
+   | :ref:`bool<class_bool>`                  | :ref:`stretch<class_SubViewportContainer_property_stretch>`                             | ``false``                                                           |
+   +------------------------------------------+-----------------------------------------------------------------------------------------+---------------------------------------------------------------------+
+   | :ref:`int<class_int>`                    | :ref:`stretch_shrink<class_SubViewportContainer_property_stretch_shrink>`               | ``1``                                                               |
+   +------------------------------------------+-----------------------------------------------------------------------------------------+---------------------------------------------------------------------+
 
 .. rst-class:: classref-reftable-group
 
@@ -49,9 +51,9 @@ Methods
 .. table::
    :widths: auto
 
-   +-------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`bool<class_bool>` | :ref:`_propagate_input_event<class_SubViewportContainer_private_method__propagate_input_event>` **(** :ref:`InputEvent<class_InputEvent>` event **)** |virtual| |const| |
-   +-------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   +-------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`bool<class_bool>` | :ref:`_propagate_input_event<class_SubViewportContainer_private_method__propagate_input_event>`\ (\ event\: :ref:`InputEvent<class_InputEvent>`\ ) |virtual| |const| |
+   +-------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 
 .. rst-class:: classref-section-separator
 
@@ -62,16 +64,35 @@ Methods
 Property Descriptions
 ---------------------
 
+.. _class_SubViewportContainer_property_consume_drag_and_drop:
+
+.. rst-class:: classref-property
+
+:ref:`bool<class_bool>` **consume_drag_and_drop** = ``false`` :ref:`🔗<class_SubViewportContainer_property_consume_drag_and_drop>`
+
+.. rst-class:: classref-property-setget
+
+- |void| **set_consume_drag_and_drop**\ (\ value\: :ref:`bool<class_bool>`\ )
+- :ref:`bool<class_bool>` **is_consume_drag_and_drop_enabled**\ (\ )
+
+If ``false``, the **SubViewportContainer** is not available as a drop target in drag-and-drop operations, and instead the :ref:`Control<class_Control>` nodes inside its :ref:`Viewport<class_Viewport>` children are potential drop targets.
+
+If ``true``, the **SubViewportContainer** itself will be considered as a drop target in drag-and-drop operations, preventing the :ref:`Control<class_Control>` nodes inside its :ref:`Viewport<class_Viewport>` children from becoming drop targets.
+
+.. rst-class:: classref-item-separator
+
+----
+
 .. _class_SubViewportContainer_property_stretch:
 
 .. rst-class:: classref-property
 
-:ref:`bool<class_bool>` **stretch** = ``false``
+:ref:`bool<class_bool>` **stretch** = ``false`` :ref:`🔗<class_SubViewportContainer_property_stretch>`
 
 .. rst-class:: classref-property-setget
 
-- void **set_stretch** **(** :ref:`bool<class_bool>` value **)**
-- :ref:`bool<class_bool>` **is_stretch_enabled** **(** **)**
+- |void| **set_stretch**\ (\ value\: :ref:`bool<class_bool>`\ )
+- :ref:`bool<class_bool>` **is_stretch_enabled**\ (\ )
 
 If ``true``, the sub-viewport will be automatically resized to the control's size.
 
@@ -85,12 +106,12 @@ If ``true``, the sub-viewport will be automatically resized to the control's siz
 
 .. rst-class:: classref-property
 
-:ref:`int<class_int>` **stretch_shrink** = ``1``
+:ref:`int<class_int>` **stretch_shrink** = ``1`` :ref:`🔗<class_SubViewportContainer_property_stretch_shrink>`
 
 .. rst-class:: classref-property-setget
 
-- void **set_stretch_shrink** **(** :ref:`int<class_int>` value **)**
-- :ref:`int<class_int>` **get_stretch_shrink** **(** **)**
+- |void| **set_stretch_shrink**\ (\ value\: :ref:`int<class_int>`\ )
+- :ref:`int<class_int>` **get_stretch_shrink**\ (\ )
 
 Divides the sub-viewport's effective resolution by this value while preserving its scale. This can be used to speed up rendering.
 
@@ -111,7 +132,9 @@ Method Descriptions
 
 .. rst-class:: classref-method
 
-:ref:`bool<class_bool>` **_propagate_input_event** **(** :ref:`InputEvent<class_InputEvent>` event **)** |virtual| |const|
+:ref:`bool<class_bool>` **_propagate_input_event**\ (\ event\: :ref:`InputEvent<class_InputEvent>`\ ) |virtual| |const| :ref:`🔗<class_SubViewportContainer_private_method__propagate_input_event>`
+
+**Experimental:** This method may be changed or removed in future versions.
 
 Virtual method to be implemented by the user. If it returns ``true``, the ``event`` is propagated to :ref:`SubViewport<class_SubViewport>` children. Propagation doesn't happen if it returns ``false``. If the function is not implemented, all events are propagated to SubViewports.
 
@@ -122,3 +145,4 @@ Virtual method to be implemented by the user. If it returns ``true``, the ``even
 .. |static| replace:: :abbr:`static (This method doesn't need an instance to be called, so it can be called directly using the class name.)`
 .. |operator| replace:: :abbr:`operator (This method describes a valid operator to use with this type as left-hand operand.)`
 .. |bitfield| replace:: :abbr:`BitField (This value is an integer composed as a bitmask of the following flags.)`
+.. |void| replace:: :abbr:`void (No return value.)`
